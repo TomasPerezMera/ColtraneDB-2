@@ -13,7 +13,7 @@ router.get('/', (req, res) => {
 router.get('/products', async (req, res) => {
     try {
         const result = await ProductService.getAll(req.query);
-        res.render('productCatalog', {
+        res.render('commerce/product-catalog', {
             title: 'Catálogo',
             products: result.docs.map(p => p.toObject()),
             pagination: result
@@ -27,7 +27,7 @@ router.get('/products', async (req, res) => {
 router.get('/products/:pid', async (req, res) => {
     try {
         const result = await ProductService.getById(req.params.pid);
-        res.render('productDetail', {
+        res.render('commerce/product-detail', {
             title: result.name,
             product: result.toObject()
         });
@@ -41,7 +41,7 @@ router.get('/carts/:cid', async (req, res) => {
     try {
         const cart = await CartService.getById(req.params.cid);
         const totalItems = cart.products.reduce((sum, item) => sum + item.quantity, 0);
-        res.render('cart', {
+        res.render('commerce/cart', {
             title: 'Tu Carrito',
             cart: cart.toObject(),
             totalItems

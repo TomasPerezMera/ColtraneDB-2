@@ -29,6 +29,11 @@ const userSchema = new mongoose.Schema({
         // Ocultaremos contraseña y email en respuestas por seguridad de datos.
         select: false
     },
+    age: {
+        type: Number,
+        required: [true, 'La edad es obligatoria!'],
+        trim: true
+    },
     password: {
         type: String,
         required: [true, 'La contraseña es obligatoria!'],
