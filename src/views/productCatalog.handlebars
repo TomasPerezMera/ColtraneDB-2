@@ -1,0 +1,35 @@
+<section class="product-catalog">
+    <h1 class="header-title">El Rincón de Coltrane</h1>
+    <hr>
+    <div class="product-catalog-container">
+        <div class="product-grid">
+            {{#each products}}
+                <article  class="product-card gradient-border">
+                    <div class="cover-wrapper hover-vinyl">
+                        <a href="/products/{{id}}">
+                            <img src="/static/covers/{{coverImageSource}}" alt="{{name}}">
+                        </a>
+                    </div>
+                    <div class="product-detail-titles">
+                        <h2 class="product-name">{{name}}</h2>
+                        <p>Artista: {{artist}}</p>
+                        <p>Precio: ${{currentPrice}}</p>
+                    </div>
+                    <button class="btn gradient-border btn-detail" data-product-id="{{id}}">Ver detalle</button>
+                </article>
+            {{/each}}
+        </div>
+        <hr>
+        <div class="pagination">
+            {{#if pagination.hasPrevPage}}
+                <a class="nav-btn btn" href="/products?page={{pagination.prevPage}}">← Anterior</a>
+            {{/if}}
+                &nbsp;
+                <span>Página {{pagination.page}} de {{pagination.totalPages}}</span>
+                &nbsp;
+            {{#if pagination.hasNextPage}}
+                <a class="nav-btn btn" href="/products?page={{pagination.nextPage}}">Siguiente →</a>
+            {{/if}}
+        </div>
+    </div>
+</section>
