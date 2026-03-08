@@ -8,6 +8,7 @@ import userRouter from './routes/user.router.js';
 import productRouter from './routes/product.router.js';
 import cartRouter from './routes/cart.router.js';
 import viewsRouter from './routes/views.router.js';
+import usersViewRouter from './routes/users.views.router.js';
 import { initializeSocket } from './sockets/socket.handler.js';
 
 
@@ -30,6 +31,7 @@ app.use('/', viewsRouter);
 app.use('/api/users', userRouter);
 app.use('/api/products', productRouter);
 app.use('/api/carts', cartRouter);
+app.use('/views/users', usersViewRouter);
 
 
 // 4. Conexión a MongoDB.
