@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
-import __dirname from './utils.js';
+import __dirname from './utils/utils.js';
 import handlebars from 'express-handlebars';
 import {Server} from 'socket.io';
 import mongoose from 'mongoose';
