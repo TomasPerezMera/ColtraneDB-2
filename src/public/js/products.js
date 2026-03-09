@@ -39,15 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Botones "Ver detalle"
-    document.querySelectorAll('.btn-detail').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        const productId = e.target.dataset.productId;
-        window.location.href = `/products/${productId}`;
-        });
-    });
-
-
     // Botones de ProductDetail.
     let quantity = 1;
     const qtyValue = document.querySelector('.qty-value');

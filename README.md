@@ -24,7 +24,9 @@
 
 ```
 src/
+├── config/ # Configuración de Passport
 ├── models/ # Esquemas de Mongoose
+├── middlewares # Sistemas de Auth
 ├── routes/ # Rutas de API y vistas
 ├── views/ # Templates Handlebars
 ├── services/ # Capa de Servicios

@@ -1,10 +1,10 @@
-<div class="cart-container">
+<div class="cart-container container">
     <h1 class="product-title">Tu Carrito</h1>
     <hr>
     {{#if cart.products.length}}
-        <div class="cart-items-container gradient-border">
+        <div class="cart-items-container gradient-border container">
             {{#each cart.products}}
-                <div class="cart-item product-card">
+                <div class="cart-item">
                     <div class="cover-wrapper hover-vinyl">
                         <a href="/products/{{this.product.id}}">
                             <img src="/static/covers/{{this.product.coverImageSource}}" alt="{{this.product.name}}">
@@ -13,7 +13,7 @@
                     <div class="product-detail-titles">
                         <h3>{{this.product.name}}</h3>
                         <p>Artista: {{this.product.artist}}</p>
-                        <p>Precio unitario: ${{this.product.currentPrice}}</p>
+                        <p>Precio Unitario: ${{this.product.currentPrice}}</p>
                         <p>Cantidad: {{this.quantity}}</p>
                         <p>Precio: ${{this.product.currentPrice}} x {{this.quantity}}</p>
                     </div>
@@ -21,7 +21,7 @@
                         <button class="qty-btn btn" data-product-id="{{product._id}}" data-action="decrease">-</button>
                         <span class="qty-display">{{quantity}}</span>
                         <button class="qty-btn btn" data-product-id="{{product._id}}" data-action="increase">+</button>
-                        <button class="remove-from-cart btn" data-product-id="{{this.product._id}}">
+                        <button class="remove-from-cart btn btn--danger" data-product-id="{{this.product._id}}">
                             Eliminar
                         </button>
                     </div>
@@ -31,16 +31,16 @@
         <div class="cart-total product-info">
             <h2>Total de ítems: {{totalItems}}</h2>
             <h2>Total a pagar: ${{cart.totalPrice}}</h2>
-            <button class="btn clear-cart">
-                Vaciar carrito
+            <button class="btn clear-cart gradient-border">
+                Vaciar Carrito
             </button>
-            <button class="btn make-purchase">
+            <button class="btn make-purchase gradient-border">
                 Realizar Compra
             </button>
         </div>
     {{else}}
-        <p class="product-info">Tu carrito está vacío.</p>
+        <p class="product-info product-title">Tu carrito está vacío.</p>
     {{/if}}
     <hr>
-    <a href="/products" class="nav-btn btn">Volver al catálogo</a>
+    <a href="/products" class="btn">Volver al catálogo</a>
 </div>
