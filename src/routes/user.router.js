@@ -32,8 +32,8 @@ router.get('/:id', async (req, res) => {
 // POST
 router.post('/', async (req, res) => {
     try {
-        const { firstName, lastName, email, password, role } = req.body;
-        const user = await UserService.create({ firstName, lastName, email, password, role });
+        const { first_name, last_name, email, age, password, role } = req.body;
+        const user = await UserService.create({ first_name, last_name, email, age, password, role });
         res.status(201).json({ status: 'success', payload: user._id });
     } catch (error) {
         res.status(400).json({ status: 'error', message: error.message });

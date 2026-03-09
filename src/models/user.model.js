@@ -9,12 +9,12 @@ const userSchema = new mongoose.Schema({
         unique: true,
         required: true
     },
-    firstName: {
+    first_name: {
         type: String,
         required: [true, 'El nombre es obligatorio!'],
         trim: true
     },
-    lastName: {
+    last_name: {
         type: String,
         required: [true, 'El apellido es obligatorio!'],
         trim: true
@@ -57,7 +57,7 @@ const userSchema = new mongoose.Schema({
 // Implementamos Paginate.
 userSchema.plugin(mongoosePaginate);
 
-// Middleware para auto-incrementar id al crear un producto.
+// Middleware para auto-incrementar id al crear un Usuario.
 userSchema.pre('save', async function(next) {
     if (this.isNew) {
         const lastUser = await this.constructor.findOne().sort({ id: -1 });

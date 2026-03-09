@@ -1,0 +1,56 @@
+<div class="profile-container">
+    <h1 class="header-title">Mi Perfil</h1>
+    <hr>
+    <div class="profile-grid">
+        <section class="profile-info gradient-border">
+            <h2 class="profile-section-title">Información Personal</h2>
+            <div class="info-block">
+                <p><strong>Nombre:</strong> {{user.first_name}} {{user.last_name}}</p>
+                <p><strong>Email:</strong> {{user.email}}</p>
+                <p><strong>Edad:</strong> {{user.age}} años</p>
+                <p><strong>Rol:</strong> {{user.role}}</p>
+            </div>
+        </section>
+        <section class="profile-cart gradient-border">
+            <h2 class="profile-section-title">Tu Carrito</h2>
+            <div class="info-block">
+                {{#if user.cart}}
+                    <p>Productos en carrito: {{user.cart.products.length}}</p>
+                    <a href="/carts/{{user.cart}}" class="btn">
+                        Ver carrito
+                    </a>
+                {{else}}
+                    <p>No tenés un carrito asignado</p>
+                {{/if}}
+            </div>
+        </section>
+        {{! Historial de compras }}
+        <section class="profile-orders gradient-border">
+            <h2 class="profile-section-title">Historial de Compras</h2>
+            <div class="info-block">
+                <p>Próximamente: tus órdenes y tickets de compra</p>
+            </div>
+        </section>
+        {{! Acciones }}
+        <section class="profile-actions gradient-border">
+            <h2 class="profile-section-title">Acciones</h2>
+            <div class="profile-actions-grid">
+                {{#if isAdmin}}
+                    <a href="/admin/products" class="btn btn--primary">
+                        Panel Admin
+                    </a>
+                {{/if}}
+                <a href="/products" class="btn">
+                    Ver productos
+                </a>
+                <form method="POST" action="/api/sessions/logout">
+                    <button type="submit" class="btn btn--danger">
+                        Cerrar sesión
+                    </button>
+                </form>
+            </div>
+        </section>
+    </div>
+    <hr>
+    <a href="/" class="btn">Volver al inicio</a>
+</div>
