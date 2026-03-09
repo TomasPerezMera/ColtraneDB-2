@@ -7,7 +7,7 @@ export const isAuthenticated = (req, res, next) => {
         return next(err);
         }
         if (!user) {
-        return res.redirect('/views/users/login');
+        return res.redirect('/login');
         }
         req.user = user;
         next();
@@ -21,7 +21,7 @@ export const isNotAuthenticated = (req, res, next) => {
         return next(err);
         }
         if (user) {
-        return res.redirect('/views/products');
+        return res.redirect('/products');
         }
         next();
     })(req, res, next);

@@ -5,21 +5,21 @@ import { generateToken } from '../utils/jwt.utils.js';
 const router = Router();
 
 // Inicio de autenticación con GitHub.
-router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
+router.get('/github', passport.authenticate('github', { scope: ['user:email'], session: false  }));
 
 // Callback de GitHub.
 router.get('/github/callback',
-    passport.authenticate('github', { failureRedirect: '/views/users/login' }),
+    passport.authenticate('github', { session: false, failureRedirect: '/login' }),
     (req, res) => {
         // TODO: JWT y guardar en cookies; por ahora, redirect temporal.
-        res.redirect('/views/users/profile');
+        res.redirect('/profile');
     }
 );
 
 
 // POST /api/sessions/register
 router.post('/register',
-    passport.authenticate('register', { session: false, failureRedirect: '/views/users/register' }),
+    passport.authenticate('register', { session: false, failureRedirect: '/register' }),
     (req, res) => {
     const token = generateToken(req.user);
     res.cookie('currentUser', token, {
@@ -27,14 +27,14 @@ router.post('/register',
         httpOnly: true,
         signed: true
     });
-    res.redirect('/views/products');
+    res.redirect('/views/commerce/product-catalog');
     }
 );
 
 
 // POST /api/sessions/login
 router.post('/login',
-    passport.authenticate('login', { session: false, failureRedirect: '/views/users/login' }),
+    passport.authenticate('login', { session: false, failureRedirect: '/login' }),
     (req, res) => {
     const token = generateToken(req.user);
     res.cookie('currentUser', token, {
@@ -42,7 +42,7 @@ router.post('/login',
         httpOnly: true,
         signed: true
     });
-    res.redirect('/views/products');
+    res.redirect('/views/commerce/product-catalog');
     }
 );
 
@@ -55,7 +55,7 @@ router.get('/github',
 
 // GET /api/sessions/github/callback
 router.get('/github/callback',
-    passport.authenticate('github', { session: false, failureRedirect: '/views/users/login' }),
+    passport.authenticate('github', { session: false, failureRedirect: '/login' }),
     (req, res) => {
     const token = generateToken(req.user);
     res.cookie('currentUser', token, {
@@ -63,7 +63,7 @@ router.get('/github/callback',
         httpOnly: true,
         signed: true
     });
-    res.redirect('/views/products');
+    res.redirect('/views/commerce/product-catalog');
     }
 );
 
@@ -89,7 +89,7 @@ router.get('/current',
 // POST /api/sessions/logout
 router.post('/logout', (req, res) => {
     res.clearCookie('currentUser');
-    res.redirect('/views/users/login');
+    res.redirect('/login');
 });
 
 export default router;

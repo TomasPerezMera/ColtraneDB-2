@@ -81,7 +81,7 @@ passport.use('github', new GitHubStrategy({
     async (accessToken, refreshToken, profile, done) => {
     try {
         const email = profile._json.email || `${profile.username}@github.com`;
-        let user = await User.findOne({ email });
+        let user = await User.findOne({ githubId: profile.id });
 
         if (!user) {
         const newUser = {
@@ -90,9 +90,11 @@ passport.use('github', new GitHubStrategy({
             email,
             age: 0,
             password: '',
+            githubId: profile.id,
             role: 'user'
         };
-        user = await User.create(newUser);
+        const userDoc = new User(newUser);
+        user = await userDoc.save();
         }
         return done(null, user);
     } catch (error) {

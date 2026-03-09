@@ -9,6 +9,7 @@ router.get('/', (req, res) => {
     res.render('index');
 });
 
+
 // GET /products - Catálogo paginado.
 router.get('/products', async (req, res) => {
     try {

@@ -7,7 +7,13 @@ const userSchema = new mongoose.Schema({
     id: {
         type: Number,
         unique: true,
-        required: true
+        required: false
+    },
+    githubId: {
+        type: String,
+        unique: true,
+        // Permite múltiples nulls.
+        sparse: true
     },
     first_name: {
         type: String,
@@ -16,8 +22,12 @@ const userSchema = new mongoose.Schema({
     },
     last_name: {
         type: String,
-        required: [true, 'El apellido es obligatorio!'],
-        trim: true
+        // Campos condicionales ya que acceso vía Github no retorna estos datos, pero sí el Register Form.
+        required: function() {
+            return this.password !== '';
+        },
+        trim: true,
+        default: ''
     },
     email: {
         type: String,
@@ -31,13 +41,27 @@ const userSchema = new mongoose.Schema({
     },
     age: {
         type: Number,
-        required: [true, 'La edad es obligatoria!'],
+        required: function() {
+        return this.password !== '';
+        },
+        default: 0,
         trim: true
     },
     password: {
         type: String,
-        required: [true, 'La contraseña es obligatoria!'],
-        minlength: [6, 'La contraseña debe tener al menos 6 caracteres'],
+        // Password requerido SÓLO si no hay githubId.
+        required: function() {
+            return !this.githubId;
+        },
+        default: '',
+        validate: {
+            validator: function(value) {
+            // Solo validamos longitud si hay password (no GitHub login).
+            if (!value || value === '') return true;
+            return value.length >= 6;
+            },
+            message: 'La contraseña debe tener al menos 6 caracteres!'
+        },
         select: false
     },
     role: {
@@ -58,12 +82,11 @@ const userSchema = new mongoose.Schema({
 userSchema.plugin(mongoosePaginate);
 
 // Middleware para auto-incrementar id al crear un Usuario.
-userSchema.pre('save', async function(next) {
-    if (this.isNew) {
+userSchema.pre('save', async function() {
+    if (this.isNew && !this.id) {
         const lastUser = await this.constructor.findOne().sort({ id: -1 });
         this.id = lastUser ? lastUser.id + 1 : 1;
     }
-    next();
 });
 
 const userModel = mongoose.model(userCollection, userSchema);
