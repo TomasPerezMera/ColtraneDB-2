@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import ProductService from '../services/product.service.js';
 import CartService from '../services/cart.service.js';
+import { isAuthenticated, loadUser } from '../middlewares/auth.middleware.js';
 
 const router = Router();
 
@@ -11,16 +12,18 @@ router.get('/', (req, res) => {
 
 
 // GET /products - Catálogo paginado.
-router.get('/products', async (req, res) => {
+router.get('/products', loadUser, async (req, res) => {
     try {
         const result = await ProductService.getAll(req.query);
         res.render('commerce/product-catalog', {
             title: 'Catálogo',
             products: result.docs.map(p => p.toObject()),
-            pagination: result
+            pagination: result,
+            user: req.user
         });
     } catch (error) {
-        res.render('error', { message: error.message });
+        console.error('Error: ', error.message);
+        res.redirect('/');
     }
 });
 
@@ -33,22 +36,25 @@ router.get('/products/:pid', async (req, res) => {
             product: result.toObject()
         });
     } catch (error) {
-        res.render('error', { message: error.message });
+        console.error('Error: ', error.message);
+        res.redirect('/products');
     }
 });
 
 // GET /carts/:cid - Vista del carrito.
-router.get('/carts/:cid', async (req, res) => {
+router.get('/carts/:cid', isAuthenticated, async (req, res) => {
     try {
         const cart = await CartService.getById(req.params.cid);
         const totalItems = cart.products.reduce((sum, item) => sum + item.quantity, 0);
         res.render('commerce/cart', {
             title: 'Tu Carrito',
             cart: cart.toObject(),
-            totalItems
+            totalItems,
+            user: req.user
         });
     } catch (error) {
-        res.render('error', { message: error.message });
+        console.error('Error: ', error.message);
+        res.redirect('/products');
     }
 });
 

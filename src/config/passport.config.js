@@ -10,7 +10,7 @@ const JWTStrategy = jwt.Strategy;
 const ExtractJWT = jwt.ExtractJwt;
 
 
-// Extractor personalizado para cookies.
+// Extractor para cookies.
 const cookieExtractor = req => {
     let token = null;
     if (req && req.signedCookies) {
@@ -30,25 +30,30 @@ const initializePassport = () => {
         try {
             const existingUser = await User.findOne({ email });
             if (existingUser) {
-                return done(null, false, { message: 'User already exists' });
+                return done(null, false, { message: 'El usuario ya existe!' });
             }
-
-        const newUser = {
-            first_name,
-            last_name,
-            email,
-            age,
-            password: createHash(password),
-            role: email === 'adminCoder@coder.com' ? 'admin' : 'user'
-        };
-
-        const result = await User.create(newUser);
-        return done(null, result);
+            const isAdmin = email === 'adminCoder@coder.com';
+            if (isAdmin && password !== 'adminCod3r123') {
+                return done(null, false, { message: 'Contraseña de Admin Inválida!' });
+            }
+            const newUser = {
+                first_name,
+                last_name,
+                email,
+                age,
+                password: createHash(password),
+                role: isAdmin ? 'admin' : 'user'
+            };
+            const result = await User.create(newUser);
+            return done(null, result);
         } catch (error) {
         return done(error);
         }
     }
 ));
+// Credenciales de usuario Admin:
+// Email: adminCoder@coder.com
+// Password: adminCod3r123
 
 
 // Estrategia LOGIN:
@@ -82,22 +87,24 @@ passport.use('github', new GitHubStrategy({
     try {
         const email = profile._json.email || `${profile.username}@github.com`;
         let user = await User.findOne({ githubId: profile.id });
-
         if (!user) {
-        const newUser = {
-            first_name: profile._json.name || profile.username,
-            last_name: '',
-            email,
-            age: 0,
-            password: '',
-            githubId: profile.id,
-            role: 'user'
-        };
+            const fullName = profile._json.name || profile.username;
+            const nameParts = fullName.split(' ');
+            const newUser = {
+                first_name: nameParts[0],
+                last_name: nameParts.slice(1).join(' ') || '',
+                email,
+                age: 0,
+                password: '',
+                githubId: profile.id,
+                role: 'user'
+            };
         const userDoc = new User(newUser);
         user = await userDoc.save();
         }
         return done(null, user);
     } catch (error) {
+        console.error('GitHub auth error:', error);
         return done(error);
         }
     }
@@ -110,12 +117,12 @@ passport.use('current', new JWTStrategy({
     secretOrKey: process.env.JWT_SECRET
     },
     async (jwt_payload, done) => {
-    try {
-    const user = await User.findById(jwt_payload.id);
-    if (!user) {
-        return done(null, false);
-    }
-    return done(null, user);
+        try {
+        const user = await User.findOne({ id:jwt_payload.id }).lean();
+        if (!user) {
+            return done(null, false);
+        }
+        return done(null, user);
     } catch (error) {
     return done(error);
         }

@@ -1,6 +1,9 @@
 <section class="product-catalog">
     <h1 class="header-title">El Rincón de Coltrane</h1>
     <hr>
+    {{#if user}}
+        <p>Hola, {{user.first_name}}!</p>
+    {{/if}}
     <div class="product-catalog-container container">
         <div class="product-grid">
             {{#each products}}

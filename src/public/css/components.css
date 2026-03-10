@@ -1,5 +1,11 @@
 /* CSS de Componentes Específicos */
 
+.product-catalog {
+    & p {
+        text-align: center;
+    }
+}
+
 .product-card {
     display: grid;
     grid-template-rows: auto 1fr auto;

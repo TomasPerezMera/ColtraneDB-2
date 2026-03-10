@@ -26,3 +26,20 @@ export const isNotAuthenticated = (req, res, next) => {
         next();
     })(req, res, next);
 };
+
+// Middleware que carga el usuario si existe, pero NO bloquea navegación si no existe.
+export const loadUser = (req, res, next) => {
+    passport.authenticate('current', { session: false }, (err, user, info) => {
+    if (user) {
+        req.user = {
+            id: user.id,
+            first_name: user.first_name,
+            last_name: user.last_name,
+            email: user.email,
+            role: user.role,
+            age: user.age
+        };
+    }
+    next();
+    })(req, res, next);
+};

@@ -36,8 +36,6 @@ const userSchema = new mongoose.Schema({
         lowercase: true,
         trim: true,
         match: [/^\S+@\S+\.\S+$/, 'Error - email con caracteres inválidos!'],
-        // Ocultaremos contraseña y email en respuestas por seguridad de datos.
-        select: false
     },
     age: {
         type: Number,
@@ -62,7 +60,6 @@ const userSchema = new mongoose.Schema({
             },
             message: 'La contraseña debe tener al menos 6 caracteres!'
         },
-        select: false
     },
     role: {
         type: String,

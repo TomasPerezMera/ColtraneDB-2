@@ -11,8 +11,13 @@ router.get('/github', passport.authenticate('github', { scope: ['user:email'], s
 router.get('/github/callback',
     passport.authenticate('github', { session: false, failureRedirect: '/login' }),
     (req, res) => {
-        // TODO: JWT y guardar en cookies; por ahora, redirect temporal.
-        res.redirect('/profile');
+        const token = generateToken(req.user);
+        res.cookie('currentUser', token, {
+            maxAge: 24 * 60 * 60 * 1000,
+            httpOnly: true,
+            signed: true
+        });
+    res.redirect('/products');
     }
 );
 
@@ -75,7 +80,7 @@ router.get('/current',
     res.json({
         status: 'success',
         user: {
-        id: req.user._id,
+        id: req.user.id,
         first_name: req.user.first_name,
         last_name: req.user.last_name,
         email: req.user.email,
