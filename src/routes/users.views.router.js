@@ -17,7 +17,10 @@ router.get('/register', isNotAuthenticated, (req, res) => {
 // Solo accesible si el usuario está logueado;
 // GET /profile
 router.get('/profile', isAuthenticated, (req, res) => {
-    res.render('users/profile');
+    res.render('users/profile', {
+        user: req.user,
+        isAdmin: req.user.role === 'admin'
+    });
 });
 
 export default router;

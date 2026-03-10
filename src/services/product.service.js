@@ -53,7 +53,7 @@ class ProductService {
         }
         return product;
     } catch (error) {
-            throw new Error('Error obteniendo producto: ' + error.message);
+            throw new Error('Error obteniendo producto: fffff ' + error.message);
         }
     }
 

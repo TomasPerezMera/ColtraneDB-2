@@ -42,7 +42,7 @@ router.get('/products/:pid', async (req, res) => {
 });
 
 // GET /carts/:cid - Vista del carrito.
-router.get('/carts/:cid', isAuthenticated, async (req, res) => {
+router.get('/carts/:cid', async (req, res) => {
     try {
         const cart = await CartService.getById(req.params.cid);
         const totalItems = cart.products.reduce((sum, item) => sum + item.quantity, 0);

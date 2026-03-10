@@ -1,5 +1,6 @@
 import cartModel from '../models/cart.model.js';
 import mongoose from 'mongoose';
+import productModel from '../models/product.model.js';
 
 class CartService {
 
@@ -32,16 +33,20 @@ class CartService {
             if (!mongoose.Types.ObjectId.isValid(cartId)) {
                 throw new Error('ID de carrito inválido');
             }
-            if (!mongoose.Types.ObjectId.isValid(productId)) {
-                throw new Error('ID de producto inválido');
+            if (isNaN(productId)) {
+                throw new Error('ID de producto inválido!');
             }
             const cart = await cartModel.findById(cartId);
             if (!cart) {
                 throw new Error('Carrito no encontrado');
             }
+            // Buscamos el producto por ID numérico.
+            const product = await productModel.findOne({ id: productId });
+            if (!product) {
+                throw new Error('Producto no encontrado.');
+            }
             const currentTotalItems = cart.products.reduce(
                 (sum, item) => sum + item.quantity, 0);
-
             // Validación Especial: este E-Commerce sólo permite la venta de 3 ítems por compra.
             if (currentTotalItems + quantity > 3) {
             throw new Error('Lo sentimos! Se permite un máximo 3 ítems por compra.');
@@ -49,12 +54,12 @@ class CartService {
 
             // Indexamos cada producto del carrito para sumar cantidad ó crear nuevo registro.
             const existingProductIndex = cart.products.findIndex(
-                item => item.product.toString() === productId
+                item => item.product.toString() === product._id.toString()
             );
             if (existingProductIndex !== -1) {
                 cart.products[existingProductIndex].quantity += quantity;
             } else {
-                cart.products.push({ product: productId, quantity: quantity });
+                cart.products.push({ product: product._id, quantity: quantity });
             }
             // Guardamos el carrito actualizado y lo retornamos con los datos del producto poblados.
             await cart.save();

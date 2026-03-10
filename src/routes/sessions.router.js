@@ -32,24 +32,31 @@ router.post('/register',
         httpOnly: true,
         signed: true
     });
-    res.redirect('/views/commerce/product-catalog');
+    res.redirect('/products');
     }
 );
 
 
 // POST /api/sessions/login
-router.post('/login',
-    passport.authenticate('login', { session: false, failureRedirect: '/login' }),
-    (req, res) => {
-    const token = generateToken(req.user);
-    res.cookie('currentUser', token, {
-        maxAge: 24 * 60 * 60 * 1000,
-        httpOnly: true,
-        signed: true
-    });
-    res.redirect('/views/commerce/product-catalog');
-    }
-);
+router.post('/login', (req, res, next) => {
+    passport.authenticate('login', { session: false }, (err, user, info) => {
+        if (err) {
+            console.error('Login error:', err);
+            return res.redirect('/login?error=server');
+        }
+        if (!user) {
+            console.log('Login failed:', info?.message || 'Unknown reason');
+            return res.redirect('/login?error=credentials');
+        }
+        const token = generateToken(user);
+        res.cookie('currentUser', token, {
+            maxAge: 24 * 60 * 60 * 1000,
+            httpOnly: true,
+            signed: true
+        });
+        res.redirect('/products');
+    })(req, res, next);
+});
 
 
 // GET /api/sessions/github
@@ -68,7 +75,7 @@ router.get('/github/callback',
         httpOnly: true,
         signed: true
     });
-    res.redirect('/views/commerce/product-catalog');
+    res.redirect('/products');
     }
 );
 
@@ -94,7 +101,7 @@ router.get('/current',
 // POST /api/sessions/logout
 router.post('/logout', (req, res) => {
     res.clearCookie('currentUser');
-    res.redirect('/login');
+    res.redirect('/products');
 });
 
 export default router;

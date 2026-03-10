@@ -43,3 +43,31 @@ export const loadUser = (req, res, next) => {
     next();
     })(req, res, next);
 };
+
+// Validación para acciones de Rol Admin:
+export const isAdmin = (req, res, next) => {
+    if (!req.user) {
+        return res.redirect('/login');
+    }
+    if (req.user.role !== 'admin') {
+        return res.status(403).json({
+        status: 'error',
+        message: 'Acceso Denegado - Sólo Admin.'
+        });
+    }
+    next();
+};
+
+// Validación para acciones de Rol User:
+export const isUser = (req, res, next) => {
+    if (!req.user) {
+        return res.redirect('/login');
+    }
+    if (req.user.role !== 'user') {
+        return res.status(403).json({
+        status: 'error',
+        message: 'Acceso Denegado - Sólo Usuarios.'
+        });
+    }
+    next();
+};

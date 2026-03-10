@@ -3,6 +3,9 @@
     <hr>
     <div class="profile-grid">
         <section class="profile-info gradient-border">
+            {{#if user}}
+                <p>Hola, {{user.first_name}}!</p>
+            {{/if}}
             <h2 class="profile-section-title">Información Personal</h2>
             <div class="info-block">
                 <p><strong>Nombre:</strong> {{user.first_name}} {{user.last_name}}</p>
@@ -11,24 +14,11 @@
                 <p><strong>Rol:</strong> {{user.role}}</p>
             </div>
         </section>
-        <section class="profile-cart gradient-border">
-            <h2 class="profile-section-title">Tu Carrito</h2>
-            <div class="info-block">
-                {{#if user.cart}}
-                    <p>Productos en carrito: {{user.cart.products.length}}</p>
-                    <a href="/carts/{{user.cart}}" class="btn">
-                        Ver carrito
-                    </a>
-                {{else}}
-                    <p>No tenés un carrito asignado</p>
-                {{/if}}
-            </div>
-        </section>
         {{! Historial de compras }}
         <section class="profile-orders gradient-border">
             <h2 class="profile-section-title">Historial de Compras</h2>
             <div class="info-block">
-                <p>Próximamente: tus órdenes y tickets de compra</p>
+                <p>Próximamente: tus órdenes y tickets de compra!</p>
             </div>
         </section>
         {{! Acciones }}

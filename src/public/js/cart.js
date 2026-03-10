@@ -56,6 +56,8 @@ async function addToCart(productId, quantity = 1) {
     animateCartIcon();
 }
 
+
+
 // Eliminar un producto del carrito.
 async function removeFromCart(productId) {
     const cartId = getCartId();
@@ -88,12 +90,26 @@ function animateCartIcon() {
 // Actualizar el contador del carrito en la interfaz.
 async function updateCartCounter() {
     const cartId = localStorage.getItem("cartId");
-    if (!cartId) return;
-    const res = await fetch(`/api/carts/${cartId}`);
-    const data = await res.json();
-    const count = data.payload.products.reduce((sum, p) => sum + p.quantity, 0);
     const counter = document.querySelector(".cart-count");
-    if (counter) counter.textContent = count;
+    if (!counter) return;
+    if (!cartId) {
+        const guestCart = JSON.parse(localStorage.getItem("guestCart") || "[]");
+        const count = guestCart.reduce((sum, item) => sum + item.quantity, 0);
+        counter.textContent = count;
+        return;
+    }
+    try {
+        const res = await fetch(`/api/carts/${cartId}`);
+        if (!res.ok){
+            counter.textContent = 0;
+            return;
+        }
+        const data = await res.json();
+        const count = data.payload.products.reduce((sum, p) => sum + p.quantity, 0);
+        counter.textContent = count;
+    } catch (error) {
+        counter.textContent = 0;
+    }
 }
 
 // Actualizar cantidad de un producto específico.
@@ -187,6 +203,21 @@ function initPurchaseButton() {
     document.body.addEventListener("click", async (e) => {
         const btn = e.target.closest(".make-purchase");
         if (!btn) return;
+        // Validamos primero si el usuario está logueado.
+        const token = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('currentUser='));
+        if (!token) {
+            await Swal.fire({
+                icon: 'warning',
+                title: 'Inicia sesión',
+                text: 'Debes iniciar sesión para realizar la compra!',
+                confirmButtonText: 'Ir a Login',
+                confirmButtonColor: '#6366f1'
+            });
+            window.location.href = '/login';
+            return;
+        }
         // Método para descontar stock de productos al "realizar compra".
         try {
             // 1. Obtenemos carrito con productos.

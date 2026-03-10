@@ -32,7 +32,7 @@ cartSchema.virtual('totalPrice').get(function() {
     return total;
 });
 
-// Incluir virtuals en JSON
+// Incluir virtuals en JSON - PERO excluímos id auto-generado (bug recurrente!).
 cartSchema.set('toJSON', { virtuals: true });
 cartSchema.set('toObject', { virtuals: true });
 

@@ -65,11 +65,10 @@ passport.use('login', new LocalStrategy(
         if (!user) {
             return done(null, false, { message: 'User not found' });
         }
-
-        if (!isValidPassword(user, password)) {
+        const isValid = isValidPassword(user, password);
+        if (!isValid) {
             return done(null, false, { message: 'Invalid password' });
         }
-
         return done(null, user);
         } catch (error) {
         return done(error);
