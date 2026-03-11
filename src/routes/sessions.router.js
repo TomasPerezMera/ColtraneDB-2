@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import passport from 'passport';
 import { generateToken } from '../utils/jwt.utils.js';
+import UserRepository from '../repositories/user.repository.js';
 
 const router = Router();
 
@@ -83,18 +84,19 @@ router.get('/github/callback',
 // GET /api/sessions/current
 router.get('/current',
     passport.authenticate('current', { session: false }),
-    (req, res) => {
-    res.json({
-        status: 'success',
-        user: {
-        id: req.user.id,
-        first_name: req.user.first_name,
-        last_name: req.user.last_name,
-        email: req.user.email,
-        age: req.user.age,
-        role: req.user.role
+    async (req, res) => {
+        try {
+            const userDTO = await UserRepository.getUserById(req.user.id);
+            res.json({
+                status: 'success',
+                user: userDTO
+            });
+        } catch (error) {
+            res.status(500).json({
+                status: 'error',
+                message: error.message
+            });
         }
-    });
     }
 );
 

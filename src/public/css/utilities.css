@@ -72,12 +72,12 @@
     justify-content: center;
     align-items: center;
     color: white;
-    padding: 0.5rem 1rem;
-    margin: 1rem;
+    padding: 10px 20px;
+    margin: 5px;
     border-radius: 5px;
     border: 1px solid var(--darkBlue);
     background-color: transparent;
-    font-size: clamp(0.8rem, 1.5vw, 1rem);
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
     cursor: pointer;
     transition: transform .25s ease, box-shadow .25s ease;
     min-height: 44px;
@@ -93,8 +93,7 @@
             0 0 20px rgba(66,135,245,.6);
     }
     &:disabled {
-        /*   TODO !!!
-        implementar en JS para botones +/- !!!*/
+        /*implementar en JS para botones +/- !!!*/
         opacity: 0.5;
         cursor: not-allowed;
         pointer-events: none;
@@ -112,6 +111,12 @@
         background: rgba(211, 47, 47, 0.1);
         box-shadow: 0 0 10px rgba(211, 47, 47, 0.5);
     }
+}
+
+.btn--return {
+    display: flex;
+    margin: auto;
+    justify-content: center;
 }
 
 
