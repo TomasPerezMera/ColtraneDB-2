@@ -23,4 +23,16 @@ router.get('/profile', isAuthenticated, (req, res) => {
     });
 });
 
+// Rutas para el proceso de reseteo de contraseña.
+// GET /forgot-password
+router.get('/forgot-password', (req, res) => {
+    res.render('users/forgot-password');
+});
+
+// GET /reset-password
+router.get('/reset-password/:token', (req, res) => {
+    res.render('users/reset-password');
+});
+
+
 export default router;
