@@ -166,3 +166,83 @@
         width: 60%;
     }
 }
+
+/* ============================================
+    Componentes de Auth Pages
+   ============================================ */
+
+.auth-container {
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 500px;
+    padding: 2rem;
+    margin: 0 auto;
+}
+
+.auth-title {
+    text-align: center;
+    font-size: clamp(2rem, 3vw, 2.5rem);
+    margin-bottom: 1rem;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Form Groups */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    & label {
+        font-size: clamp(1rem, 1.2vw, 1.125rem);
+        color: white;
+    }
+}
+
+.form-input {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+    font-family: "Clarendon Regular", serif;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid var(--darkBlue);
+    border-radius: 8px;
+    color: white;
+    transition: border-color 0.3s ease, background 0.3s ease;
+    &:focus {
+        outline: none;
+        border-color: var(--violet);
+        background: rgba(255, 255, 255, 0.1);
+    }
+    &::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+    }
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    & > * {
+        flex: 1;
+        min-width: 150px;
+    }
+}
+
+.auth-alternative {
+    text-align: center;
+    & p {
+        margin-bottom: 1rem;
+        color: rgba(255, 255, 255, 0.7);
+    }
+}
+

@@ -135,6 +135,71 @@ async function updateProductQuantity(productId, newQuantity) {
     location.reload();
 }
 
+
+// Gestión de proceso de compra.
+async function handlePurchase() {
+    // 1. Validamos si el usuario está logueado.
+    let isLoggedIn = false;
+    try {
+        const authCheck = await fetch('/api/sessions/current');
+        isLoggedIn = authCheck.ok;
+    } catch (error) {
+        isLoggedIn = false;
+    }
+    if (!isLoggedIn) {
+        await Swal.fire({
+            icon: 'warning',
+            title: 'Iniciá sesión',
+            text: 'Tenés que iniciar sesión para realizar la compra!',
+            confirmButtonText: 'Ir a Login',
+            confirmButtonColor: '#6366f1'
+        });
+        window.location.href = '/login';
+        return;
+    }
+    // 2. Procesamos compra llamando al endpoint /purchase.
+    try {
+        const cartId = getCartId();
+        const res = await fetch(`/api/carts/${cartId}/purchase`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+        });
+        const data = await res.json();
+        // Stock Check: si hay algún producto sin stock, cancelamos la venta.
+        if (data.productosNoComprados && data.productosNoComprados.length > 0) {
+            await Swal.fire({
+                icon: 'error',
+                title: 'Stock insuficiente',
+                text: 'Algunos productos no tienen stock disponible. Por favor, actualiza tu carrito.',
+                confirmButtonText: 'Entendido',
+                confirmButtonColor: '#6366f1'
+            });
+            return;
+        }
+        if (!res.ok) {
+            throw new Error(data.message || 'Error al procesar la compra');
+        }
+        // Compra completa exitosa
+        await Swal.fire({
+            icon: 'success',
+            title: '¡Gracias por tu compra!',
+            text: `Tu pedido ha sido procesado. Ticket: ${data.ticket.code}`,
+            confirmButtonText: 'Volver al catálogo',
+            confirmButtonColor: '#6366f1'
+        });
+        window.location.href = '/products';
+    } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: error.message || 'No se pudo procesar la compra',
+            confirmButtonColor: '#6366f1'
+        });
+    }
+}
+
+
+
 // Event Listeners y funciones para inicializar botones.
 function initAddToCartButtons() {
     document.body.addEventListener("click", async (e) => {
@@ -203,59 +268,10 @@ function initPurchaseButton() {
     document.body.addEventListener("click", async (e) => {
         const btn = e.target.closest(".make-purchase");
         if (!btn) return;
-        // Validamos primero si el usuario está logueado.
-        const token = document.cookie
-            .split('; ')
-            .find(row => row.startsWith('currentUser='));
-        if (!token) {
-            await Swal.fire({
-                icon: 'warning',
-                title: 'Inicia sesión',
-                text: 'Debes iniciar sesión para realizar la compra!',
-                confirmButtonText: 'Ir a Login',
-                confirmButtonColor: '#6366f1'
-            });
-            window.location.href = '/login';
-            return;
-        }
-        // Método para descontar stock de productos al "realizar compra".
-        try {
-            // 1. Obtenemos carrito con productos.
-            const cartId = getCartId();
-            const res = await fetch(`/api/carts/${cartId}`);
-            const data = await res.json();
-            const cart = data.payload;
-            // 2. Actualizamos el stock de cada producto.
-            for (const item of cart.products) {
-                const productId = item.product.id;
-                const quantity = item.quantity;
-                await fetch(`/api/products/${productId}/purchase`, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ quantity })
-                });
-            }
-            // 3. Mostramos confirmación al usuario.
-            await Swal.fire({
-                icon: 'success',
-                title: '¡Gracias por tu compra!',
-                text: 'Tu pedido ha sido procesado correctamente',
-                confirmButtonText: 'Volver al catálogo',
-                confirmButtonColor: '#6366f1'
-            });
-            // 4. Vaciamos carrito y redirigimos a Productos.
-            await clearCart();
-            window.location.href = '/products';
-        } catch (error) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error',
-                text: 'No se pudo procesar la compra',
-                confirmButtonColor: '#6366f1'
-            });
-        }
+        await handlePurchase();
     });
 }
+
 
 // Event Listeners en la carga de página.
 document.addEventListener("DOMContentLoaded", async () => {

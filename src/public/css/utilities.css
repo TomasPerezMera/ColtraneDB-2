@@ -13,52 +13,10 @@
 
 /* TODO REVAMP: General Utility Classes */
 
-.btn {
-    font-family: "Clarendon Regular", serif;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    padding: 10px 20px;
-    margin: 5px;
-    border-radius: 5px;
-    border: 1px solid var(--darkBlue);
-    background-color: transparent;
-    font-size: clamp(1rem, 1.5vw, 1.125rem);
-    cursor: pointer;
-    transition: transform .25s ease, box-shadow .25s ease;
-    min-height: 44px;
-    appearance: none;
-    background: none;
-    &:is(a) {
-        text-decoration: none;
-    }
-    &:hover {
-        transform: scale(1.05);
-        box-shadow:
-            0 0 10px rgba(0,0,0,.5),
-            0 0 20px rgba(66,135,245,.6);
-    }
-    &:disabled {
-        /*implementar en JS para botones +/- !!!*/
-        opacity: 0.5;
-        cursor: not-allowed;
-        pointer-events: none;
-    }
-}
 
-.btn--nav {
-    border: 1px solid transparent;
-}
 
-.btn--danger {
-    border-color: #d32f2f;
-    color: #fe4e4e;
-    &:hover {
-        background: rgba(211, 47, 47, 0.1);
-        box-shadow: 0 0 10px rgba(211, 47, 47, 0.5);
-    }
-}
+
+
 
 .gradient-border {
     border-radius: 12px;
@@ -106,6 +64,55 @@
 
 
 
+/* Button Utilities */
+
+.btn {
+    font-family: "Clarendon Regular", serif;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    padding: 0.5rem 1rem;
+    margin: 1rem;
+    border-radius: 5px;
+    border: 1px solid var(--darkBlue);
+    background-color: transparent;
+    font-size: clamp(0.8rem, 1.5vw, 1rem);
+    cursor: pointer;
+    transition: transform .25s ease, box-shadow .25s ease;
+    min-height: 44px;
+    appearance: none;
+    background: none;
+    &:is(a) {
+        text-decoration: none;
+    }
+    &:hover {
+        transform: scale(1.05);
+        box-shadow:
+            0 0 10px rgba(0,0,0,.5),
+            0 0 20px rgba(66,135,245,.6);
+    }
+    &:disabled {
+        /*   TODO !!!
+        implementar en JS para botones +/- !!!*/
+        opacity: 0.5;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+}
+
+.btn--nav {
+    border: 1px solid transparent;
+}
+
+.btn--danger {
+    border-color: #d32f2f;
+    color: #fe4e4e;
+    &:hover {
+        background: rgba(211, 47, 47, 0.1);
+        box-shadow: 0 0 10px rgba(211, 47, 47, 0.5);
+    }
+}
 
 
 /*

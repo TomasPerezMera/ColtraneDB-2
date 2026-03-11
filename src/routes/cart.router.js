@@ -1,5 +1,9 @@
 import { Router } from 'express';
 import CartService from '../services/cart.service.js';
+import TicketService from '../services/ticket.service.js';
+import ProductService from '../services/product.service.js';
+import { isAuthenticated, isUser } from '../middlewares/auth.middleware.js' ;
+
 
 const router = Router();
 
@@ -109,5 +113,61 @@ router.delete('/:cid', async (req, res) => {
         res.status(404).json({ status: 'error', message: error.message });
     }
 });
+
+
+// POST /:cid/purchase - Confirmación de Compra.
+router.post('/:cid/purchase', isAuthenticated, isUser, async (req, res) => {
+    try {
+        const cart = await CartService.getById(req.params.cid);
+        if (!cart || cart.products.length === 0) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Carrito vacío'
+            });
+        }
+        // Stock-check para manejar falta de stock en algún producto.
+        const productosNoComprados = [];
+        for (const item of cart.products) {
+            const product = await ProductService.getById(item.product.id);
+            if (product.stock < item.quantity) {
+                productosNoComprados.push(item.product.id);
+            }
+        }
+        // Si algún producto no tiene stock, no se realiza la venta.
+        if (productosNoComprados.length > 0) {
+            return res.status(400).json({
+                status: 'error',
+                message: 'Stock insuficiente',
+                productosNoComprados
+            });
+        }
+        // Luego de Stock-check, procesamos la venta;
+        let totalAmount = 0;
+        for (const item of cart.products) {
+            const product = await ProductService.getById(item.product.id);
+            totalAmount += product.currentPrice * item.quantity;
+            // Descontamos stock de productos.
+            await ProductService.update(product.id, {
+                stock: product.stock - item.quantity
+            });
+        }
+        // Generamos el ticket de venta;
+        const ticket = await TicketService.create(req.user.email, totalAmount);
+        // Vaciamos carrito luego de la venta.
+        cart.products = [];
+        await cart.save();
+        res.status(200).json({
+            status: 'success',
+            ticket
+        });
+    } catch (error) {
+        res.status(500).json({
+            status: 'error',
+            message: error.message
+        });
+    }
+});
+
+
 
 export default router;

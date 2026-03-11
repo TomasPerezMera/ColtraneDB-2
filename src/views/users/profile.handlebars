@@ -3,9 +3,6 @@
     <hr>
     <div class="profile-grid">
         <section class="profile-info gradient-border">
-            {{#if user}}
-                <p>Hola, {{user.first_name}}!</p>
-            {{/if}}
             <h2 class="profile-section-title">Información Personal</h2>
             <div class="info-block">
                 <p><strong>Nombre:</strong> {{user.first_name}} {{user.last_name}}</p>
@@ -14,14 +11,12 @@
                 <p><strong>Rol:</strong> {{user.role}}</p>
             </div>
         </section>
-        {{! Historial de compras }}
         <section class="profile-orders gradient-border">
             <h2 class="profile-section-title">Historial de Compras</h2>
             <div class="info-block">
                 <p>Próximamente: tus órdenes y tickets de compra!</p>
             </div>
         </section>
-        {{! Acciones }}
         <section class="profile-actions gradient-border">
             <h2 class="profile-section-title">Acciones</h2>
             <div class="profile-actions-grid">

@@ -38,7 +38,7 @@ router.get('/:id', async (req, res) => {
     if (isNaN(req.params.id)) {
         return res.status(400).json({
             status: 'error',
-            message: 'ID de producto inválido!!!!'
+            message: 'ID de producto inválido!'
         });
     }
     try {
