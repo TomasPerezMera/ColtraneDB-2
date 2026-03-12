@@ -1,14 +1,5 @@
 /* TODO REVAMP: General Utility Classes */
 
-.gradient-border {
-    border-radius: 12px;
-    border: 2px solid transparent;
-    background:
-        linear-gradient(#000,#000) padding-box,
-        linear-gradient(to left,var(--violet),var(--darkBlue)) border-box;
-    box-shadow: 0 0 15px rgba(120,90,255,0.2);
-}
-
 .cover-wrapper {
     width: 100%;
     aspect-ratio: 1 / 1;
@@ -23,15 +14,6 @@
         display:block;
         width:100%;
         height:100%;
-    }
-}
-
-.hover-vinyl {
-    &:hover {
-        box-shadow: 0 10px 25px rgba(90,80,255,0.25);
-        & img {
-        transform: scale(1.05);
-        }
     }
 }
 
@@ -98,6 +80,24 @@
     display: flex;
     margin: auto;
     justify-content: center;
+}
+
+.gradient-border {
+    border-radius: 12px;
+    border: 2px solid transparent;
+    background:
+        linear-gradient(#000,#000) padding-box,
+        linear-gradient(to left,var(--violet),var(--darkBlue)) border-box;
+    box-shadow: 0 0 15px rgba(120,90,255,0.2);
+}
+
+.hover-vinyl {
+    &:hover {
+        box-shadow: 0 10px 25px rgba(90,80,255,0.25);
+        & img {
+        transform: scale(1.05);
+        }
+    }
 }
 
 
