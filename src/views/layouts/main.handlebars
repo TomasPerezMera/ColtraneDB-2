@@ -12,13 +12,22 @@
             <a class="navbar-logo" href="/">
                 <img src="/favicon.ico" alt="Coltrane">
             </a>
-            <a class="btn" href="/products">Productos</a>
-            <a class="btn" href="/profile">Mi Cuenta</a>
-            <a href="/carts/{{cartId}}" class="nav-cart-btn btn" id="cart-link">
-                🛒 <span class="cart-count">0</span>
-            </a>
+            {{! Hamburger button (solo mobile) }}
+            <button class="hamburger" id="hamburger-btn" aria-label="Menu">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
+            <div class="navbar-menu" id="navbar-menu">
+                <a class="btn navbar-btn" href="/products">Productos</a>
+                <a class="btn navbar-btn" href="/profile">Mi Cuenta</a>
+                <a href="/carts/{{cartId}}" class="btn nav-cart-btn navbar-btn" id="cart-link">
+                    🛒 <span class="cart-count">0</span>
+                </a>
+            </div>
         </nav>
         {{{body}}}
+    <script src="/js/navbar.js"></script>
     <script src="/js/cart.js"></script>
     <script src="/js/products.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

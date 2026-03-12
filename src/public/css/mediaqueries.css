@@ -1,0 +1,93 @@
+/* Media Queries para Tablet y Desktop modes */
+
+@media (min-width: 768px) {
+    p {
+        font-size: clamp(1rem, 1.2vw, 1.2rem);
+    }
+    .hamburger {
+        display: none;
+    }
+    .navbar-menu {
+        /* Resetear estilos mobile */
+        position: static;
+        width: auto;
+        height: auto;
+        max-width: none;
+        background: none;
+        backdrop-filter: none;
+        flex-direction: row;
+        gap: 1rem;
+        padding: 0;
+        margin-left: auto;
+        right: auto;
+        & .navbar-btn {
+            width: auto;
+            font-size: clamp(1rem, 1.2vw, 1.125rem);
+        }
+    }
+    .welcome-container {
+        & .welcome-image {
+            max-width: 40%;
+        }
+    }
+    .product-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .product-card {
+        flex: 1 1 calc(50% - 1rem);
+    }
+    .detail-grid{
+    grid-template-columns:1fr 2fr;
+    grid-template-areas:"cover-wrapper product-info";
+    & .product-detail-image{
+        margin: 50px 10px 0;
+        position:sticky;
+        top:1rem;
+        align-self:start;
+        }
+    }
+    .cart-item {
+        grid-template-columns: auto 1fr auto;
+        grid-template-areas: "cover info controls";
+        gap: 1.5rem;
+        align-items: center;
+        text-align: left;
+        & .cover-wrapper {
+            width: 120px;
+            height: 120px;
+            margin: 0;
+        }
+    }
+    .product-info {
+        text-align: left;
+        padding: 50px;
+    }
+    .quantity-controls {
+        margin: 0;
+        max-width: none;
+        }
+    .profile-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+
+@media (min-width: 1024px) {
+    .product-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 4rem;
+    }
+    .product-card {
+        flex: 1 1 calc(33.333% - 1rem);
+    }
+    .cart-item {
+        & .cover-wrapper {
+            width: 150px;
+            height: 150px;
+        }
+    }
+    .product-info {
+        text-align: left;
+        padding: 2.5rem;
+    }
+}

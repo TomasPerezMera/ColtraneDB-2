@@ -102,15 +102,17 @@
 
 .product-info {
     background: rgba(25,10,60,0.7);
-    padding: 2.5rem;
+    padding: 0.5rem;
     border-radius: 10px;
-    & .product-detail-titles {
-        & p {
-            margin: 10px 0;
-            font-size: clamp(1.2rem, 1.5vw, 1.5rem);
-        }
+}
+
+.product-info .product-detail-titles {
+    p {
+        margin: 10px 0;
+        font-size: clamp(1.2rem, 1.5vw, 1.5rem);
     }
 }
+
 .product-price {
     color:var(--color-accent);
     font-weight: bold;

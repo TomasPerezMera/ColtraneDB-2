@@ -9,6 +9,9 @@
                 <p><strong>Email:</strong> {{user.email}}</p>
                 <p><strong>Edad:</strong> {{user.age}} años</p>
                 <p><strong>Rol:</strong> {{user.role}}</p>
+                {{#if isAdmin}}
+                    <p class="header-title">Cuenta Admin Coderhouse!!</p>
+                {{/if}}
             </div>
         </section>
         <section class="profile-orders gradient-border">
@@ -20,11 +23,6 @@
         <section class="profile-actions gradient-border">
             <h2 class="profile-section-title">Acciones</h2>
             <div class="profile-actions-grid">
-                {{#if isAdmin}}
-                    <a href="/admin/products" class="btn btn--primary">
-                        Panel Admin
-                    </a>
-                {{/if}}
                 <a href="/products" class="btn">
                     Ver productos
                 </a>

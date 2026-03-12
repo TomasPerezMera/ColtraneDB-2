@@ -9,6 +9,7 @@ const transporter = nodemailer.createTransport({
 });
 
 export const sendPasswordResetEmail = async (email, resetToken) => {
+    // Variable BASE_URL utilizada para permitir subir proyecto a Render y no depender de LocalHost.
     const resetLink = `${process.env.BASE_URL}/reset-password/${resetToken}`;
     const mailOptions = {
         from: process.env.EMAIL_USER,
