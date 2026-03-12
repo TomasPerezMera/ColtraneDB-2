@@ -2,7 +2,7 @@ import productModel from '../models/product.model.js';
 
 class ProductDAO {
     async findById(id) {
-        return await productModel.findOne({ id });
+        return await productModel.findOne(id);
     }
 
     async findAll(filters = {}) {

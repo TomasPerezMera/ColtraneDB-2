@@ -1,6 +1,7 @@
 import cartModel from '../models/cart.model.js';
 import mongoose from 'mongoose';
 import CartRepository from '../repositories/cart.repository.js';
+import ProductService from './product.service.js';
 
 class CartService {
 
@@ -16,7 +17,7 @@ class CartService {
     async getById(cartId) {
         try {
             if (!mongoose.Types.ObjectId.isValid(cartId)) {
-                throw new Error('ID de carrito inválido');
+                throw new Error('ID de carrito inválido GET');
             }
             const cart = await CartRepository.getCartById(cartId);
             if (!cart) {
@@ -31,7 +32,7 @@ class CartService {
     async addProduct(cartId, productId, quantity = 1) {
         try {
             if (!mongoose.Types.ObjectId.isValid(cartId)) {
-                throw new Error('ID de carrito inválido');
+                throw new Error('ID de carrito inválido ADDPROD');
             }
             if (isNaN(productId)) {
                 throw new Error('ID de producto inválido!');
@@ -41,7 +42,7 @@ class CartService {
                 throw new Error('Carrito no encontrado');
             }
             // Buscamos el producto por ID numérico.
-            const product = await ProductService.getById({ id: productId });
+            const product = await ProductService.getById(productId);
             if (!product) {
                 throw new Error('Producto no encontrado.');
             }
@@ -51,10 +52,9 @@ class CartService {
             if (currentTotalItems + quantity > 3) {
             throw new Error('Lo sentimos! Se permite un máximo 3 ítems por compra.');
             }
-
             // Indexamos cada producto del carrito para sumar cantidad ó crear nuevo registro.
             const existingProductIndex = cart.products.findIndex(
-                item => item.product.toString() === product._id.toString()
+                item => item.product._id.equals(product._id)
             );
             if (existingProductIndex !== -1) {
                 cart.products[existingProductIndex].quantity += quantity;
@@ -72,22 +72,25 @@ class CartService {
     async updateProductQuantity(cartId, productId, newQuantity) {
         try {
             if (!mongoose.Types.ObjectId.isValid(cartId)) {
-                throw new Error('ID de carrito inválido');
+                throw new Error('ID de carrito inválido UPDATEPRODQ');
             }
             if (!mongoose.Types.ObjectId.isValid(productId)) {
                 throw new Error('ID de producto inválido');
             }
             const cart = await CartRepository.getCartById(cartId);
             if (!cart) throw new Error('Carrito no encontrado');
+            console.log("productId recibido: ", productId);
+            cart.products.forEach(p => {
+                console.log("PRODUCT _IDS:", p.product._id)
+            })
 
             // Buscamos el producto en el carrito;
             const productIndex = cart.products.findIndex(
-                item => item.product.toString() === productId
+                item => item.product._id.toString() === productId
             );
             if (productIndex === -1) {
-                throw new Error('Producto no encontrado en el carrito');
+                throw new Error('Producto no encontrado en el carrito FINDINDEX');
             }
-
             // Si la nueva cantidad es <= 0, eliminamos el producto.
             if (newQuantity <= 0) {
                 cart.products.splice(productIndex, 1);
@@ -110,7 +113,7 @@ class CartService {
     async removeProduct(cartId, productId) {
         try {
             if (!mongoose.Types.ObjectId.isValid(cartId)) {
-                throw new Error('ID de carrito inválido');
+                throw new Error('ID de carrito inválido REMOVE');
             }
             if (!mongoose.Types.ObjectId.isValid(productId)) {
                 throw new Error('ID de producto inválido');
@@ -132,7 +135,7 @@ class CartService {
     async updateCart(cartId, productsArray) {
         try {
             if (!mongoose.Types.ObjectId.isValid(cartId)) {
-                throw new Error('ID de carrito inválido');
+                throw new Error('ID de carrito inválido UPDATE');
             }
             if (!Array.isArray(productsArray)) {
                 throw new Error('Se esperaba un array de productos');
@@ -163,7 +166,7 @@ class CartService {
     async clearCart(cartId) {
         try {
             if (!mongoose.Types.ObjectId.isValid(cartId)) {
-                throw new Error('ID de carrito inválido');
+                throw new Error('ID de carrito inválido CLEAR');
             }
             const cart = await CartRepository.updateCart(cartId, { products: [] });
             if (!cart) {

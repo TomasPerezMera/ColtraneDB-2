@@ -53,7 +53,7 @@ class ProductService {
         }
         return product;
     } catch (error) {
-            throw new Error('Error obteniendo producto: fffff ' + error.message);
+            throw new Error('Error obteniendo producto: ' + error.message);
         }
     }
 
@@ -71,13 +71,13 @@ class ProductService {
             if (!Number.isInteger(Number(productId))) {
                 throw new Error('ID de producto inválido');
             }
-            const updatedProduct = await ProductRepository.updateProduct({ id: productId }, updateData, { returnDocument: 'after', runValidators: true });
+            const updatedProduct = await ProductRepository.updateProduct(productId, updateData, { returnDocument: 'after', runValidators: true });
             if (!updatedProduct) {
                 throw new Error('Producto no encontrado');
             }
             return updatedProduct;
         } catch (error) {
-            throw new Error('Error actualizando producto: ' + error.message);
+            throw new Error('Error actualizando producto UPDATE: ' + error.message);
         }
     }
 

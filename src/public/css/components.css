@@ -98,6 +98,8 @@
 
 .product-detail-image{
     position:static;
+    max-width: 70%;
+    margin: 2rem auto 0;
 }
 
 .product-info {
@@ -159,13 +161,14 @@
     padding: 2rem;
     text-align: center;
     & h2 {
-        font-size: clamp(1.5rem, 2vw, 2rem);
+        font-size: clamp(1rem, 2vw, 1.25rem);
         flex: 1;
         margin: 1rem auto;
     }
     & .btn {
         margin: 1rem auto;
         width: 60%;
+        background: var(--color-accent);
     }
 }
 

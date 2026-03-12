@@ -63,7 +63,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const addBtn = document.getElementById('add-to-cart-btn');
+    const addBtn = document.getElementById('add-to-cart');
     if (addBtn) {
         addBtn.addEventListener('click', async () => {
             const productId = addBtn.dataset.productId;

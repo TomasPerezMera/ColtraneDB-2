@@ -5,8 +5,8 @@ class ProductRepository {
         return await ProductDAO.findById(id);
     }
 
-    async getAllProducts(filters = {}) {
-        return await ProductDAO.findAllPaginated(filters);
+    async getAllProducts(filters, paginateOptions) {
+        return await ProductDAO.findAllPaginated(filters, paginateOptions);
     }
 
     async createProduct(productData) {
