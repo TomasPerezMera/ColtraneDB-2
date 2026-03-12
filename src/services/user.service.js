@@ -1,11 +1,11 @@
-import userModel from '../models/user.model.js';
+import UserRepository from '../repositories/user.repository.js';
 
 class UserService {
 
     async getAll(options = {}) {
         try {
             const { page = 1, limit = 10 } = options;
-            return await userModel.paginate({}, { page, limit });
+            return await UserRepository.getAllUsersPaginated({}, { page, limit })
         } catch (error) {
             throw new Error(`Error al obtener usuarios: ${error.message}`);
         }
@@ -17,7 +17,7 @@ class UserService {
             if (!Number.isInteger(Number(userId))) {
                 throw new Error('ID de usuario inválido');
             }
-            const user = await userModel.findOne({ id: userId });
+            const user = await UserRepository.getUserById({ id: userId });
             if (!user) throw new Error('Usuario no encontrado');
             return user;
         } catch (error) {
@@ -27,7 +27,7 @@ class UserService {
 
     async create(userData) {
         try {
-            const newUser = await userModel.create(userData);
+            const newUser = await UserRepository.createUser(userData);
             return newUser;
         } catch (error) {
             throw new Error(`Error creando usuario: ${error.message}`);
@@ -39,7 +39,7 @@ class UserService {
             if (!Number.isInteger(Number(userId))) {
                 throw new Error('ID de usuario inválido');
             }
-            const updatedUser = await userModel.findOneAndUpdate({ id: userId }, updateData, { returnDocument: 'after', runValidators: true });
+            const updatedUser = await UserRepository.updateUser({ id: userId }, updateData);
             if (!updatedUser) throw new Error('Usuario no encontrado');
             return updatedUser;
         } catch (error) {
@@ -52,7 +52,7 @@ class UserService {
             if (!Number.isInteger(Number(userId))) {
                 throw new Error('ID de usuario inválido');
             }
-            const deletedUser = await userModel.deleteOne({ id: userId });
+            const deletedUser = await UserRepository.deleteUser({ id: userId });
             if (deletedUser.deletedCount === 0) {
                 throw new Error('Usuario no encontrado');
             }

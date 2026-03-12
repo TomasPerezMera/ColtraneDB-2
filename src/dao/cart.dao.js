@@ -10,7 +10,9 @@ class CartDAO {
     }
 
     async update(cartId, cartData) {
-        return await cartModel.findByIdAndUpdate(cartId, cartData, { new: true });
+    return await cartModel
+        .findByIdAndUpdate(cartId, cartData, { returnDocument: 'after', runValidators: true })
+        .populate('products.product');
     }
 
     async delete(cartId) {

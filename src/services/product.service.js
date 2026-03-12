@@ -1,4 +1,4 @@
-import productModel from '../models/product.model.js';
+import ProductRepository from '../repositories/product.repository.js';
 
 class ProductService {
 
@@ -26,7 +26,7 @@ class ProductService {
                 sort === 'desc' ? { currentPrice: -1 } : {}
             };
 
-            const result = await productModel.paginate(filter, paginateOptions);
+            const result = await ProductRepository.getAllProducts(filter, paginateOptions);
             const baseUrl = '/api/products';
                 result.prevLink = result.hasPrevPage
                     ? `${baseUrl}?page=${result.prevPage}&limit=${limit}`
@@ -47,7 +47,7 @@ class ProductService {
         if (!Number.isInteger(Number(productId))) {
             throw new Error('ID de producto inválido');
         }
-        const product = await productModel.findOne({ id: productId });
+        const product = await ProductRepository.getProductById({ id: productId });
         if (!product) {
             throw new Error('Producto no encontrado!');
         }
@@ -59,7 +59,7 @@ class ProductService {
 
     async create(productData) {
         try {
-            const newProduct = await productModel.create(productData);
+            const newProduct = await ProductRepository.createProduct(productData);
             return newProduct;
         } catch (error) {
             throw new Error('Error creando producto: ' + error.message);
@@ -71,11 +71,7 @@ class ProductService {
             if (!Number.isInteger(Number(productId))) {
                 throw new Error('ID de producto inválido');
             }
-            //Si stock llega a 0, marcar como no disponible.
-            if (updateData.stock !== undefined && updateData.stock === 0) {
-                updateData.isAvailable = false;
-            }
-            const updatedProduct = await productModel.findOneAndUpdate({ id: productId }, updateData, { returnDocument: 'after', runValidators: true });
+            const updatedProduct = await ProductRepository.updateProduct({ id: productId }, updateData, { returnDocument: 'after', runValidators: true });
             if (!updatedProduct) {
                 throw new Error('Producto no encontrado');
             }
@@ -90,7 +86,7 @@ class ProductService {
             if (!Number.isInteger(Number(productId))) {
                 throw new Error('ID de producto inválido');
             }
-            const deletedProduct = await productModel.findOneAndUpdate({ id: productId }, { isAvailable: false }, { returnDocument: 'after' });
+            const deletedProduct = await ProductRepository.deleteProduct({ id: productId }, { returnDocument: 'after' });
             if (!deletedProduct) {
                 throw new Error('Producto no encontrado');
             }

@@ -9,6 +9,10 @@ class ProductDAO {
         return await productModel.find(filters);
     }
 
+    async findAllPaginated(filter, options) {
+    return await productModel.paginate(filter, options);
+    }
+
     async create(productData) {
         return await productModel.create(productData);
     }
@@ -17,7 +21,7 @@ class ProductDAO {
         return await productModel.findOneAndUpdate(
             { id },
             productData,
-            { new: true }
+            { returnDocument: 'after', runValidators: true }
         );
     }
 

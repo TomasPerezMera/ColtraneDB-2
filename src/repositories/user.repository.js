@@ -27,6 +27,12 @@ class UserRepository {
         const users = await UserDAO.getAll();
         return users.map(user => new UserDTO(user));
     }
+
+    async getAllUsersPaginated(filter = {}, options) {
+        const result = await UserDAO.getAllPaginated(filter, options);
+        result.docs = result.docs.map(user => new UserDTO(user));
+        return result;
+    }
 }
 
 export default new UserRepository();

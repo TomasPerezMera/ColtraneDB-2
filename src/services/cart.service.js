@@ -1,12 +1,12 @@
 import cartModel from '../models/cart.model.js';
 import mongoose from 'mongoose';
-import productModel from '../models/product.model.js';
+import CartRepository from '../repositories/cart.repository.js';
 
 class CartService {
 
     async create() {
         try {
-            const newCart = await cartModel.create({ products: [] });
+            const newCart = await CartRepository.createCart();
             return newCart;
         } catch (error) {
             throw new Error(`Error creando carrito: ${error.message}`);
@@ -18,7 +18,7 @@ class CartService {
             if (!mongoose.Types.ObjectId.isValid(cartId)) {
                 throw new Error('ID de carrito inválido');
             }
-            const cart = await cartModel.findById(cartId).populate('products.product');
+            const cart = await CartRepository.getCartById(cartId);
             if (!cart) {
                 throw new Error('Carrito no encontrado!');
             }
@@ -36,12 +36,12 @@ class CartService {
             if (isNaN(productId)) {
                 throw new Error('ID de producto inválido!');
             }
-            const cart = await cartModel.findById(cartId);
+            const cart = await CartRepository.getCartById(cartId);
             if (!cart) {
                 throw new Error('Carrito no encontrado');
             }
             // Buscamos el producto por ID numérico.
-            const product = await productModel.findOne({ id: productId });
+            const product = await ProductService.getById({ id: productId });
             if (!product) {
                 throw new Error('Producto no encontrado.');
             }
@@ -62,10 +62,7 @@ class CartService {
                 cart.products.push({ product: product._id, quantity: quantity });
             }
             // Guardamos el carrito actualizado y lo retornamos con los datos del producto poblados.
-            await cart.save();
-            const updatedCart = await cartModel
-                .findById(cartId)
-                .populate('products.product');
+            const updatedCart = await CartRepository.updateCart(cartId, { products: cart.products });
             return updatedCart;
         } catch (error) {
             throw new Error(`Error agregando producto: ${error.message}`);
@@ -80,7 +77,7 @@ class CartService {
             if (!mongoose.Types.ObjectId.isValid(productId)) {
                 throw new Error('ID de producto inválido');
             }
-            const cart = await cartModel.findById(cartId);
+            const cart = await CartRepository.getCartById(cartId);
             if (!cart) throw new Error('Carrito no encontrado');
 
             // Buscamos el producto en el carrito;
@@ -103,8 +100,8 @@ class CartService {
                 }
                 cart.products[productIndex].quantity = newQuantity;
             }
-            await cart.save();
-            return await cartModel.findById(cartId).populate('products.product');
+            const updatedCart = await CartRepository.updateCart(cartId, { products: cart.products });
+            return updatedCart;
         } catch (error) {
             throw new Error(`Error actualizando cantidad: ${error.message}`);
         }
@@ -125,8 +122,8 @@ class CartService {
             cart.products = cart.products.filter(
                 item => item.product.toString() !== productId
             );
-            await cart.save();
-            return await cartModel.findById(cartId).populate('products.product');
+            const updatedCart = await CartRepository.updateCart(cartId, { products: cart.products });
+            return updatedCart;
         } catch (error) {
             throw new Error(`Error eliminando producto: ${error.message}`);
         }
@@ -155,12 +152,7 @@ class CartService {
             if (totalItems > 3) {
                 throw new Error('Error: máximo de 3 ítems por compra!');
             }
-            const cart = await cartModel.findByIdAndUpdate(
-                cartId,
-                { products: productsArray },
-                { new: true, runValidators: true }
-            ).populate('products.product');
-
+            const cart = await CartRepository.updateCart(cartId, { products: productsArray });
             if (!cart) throw new Error('Carrito no encontrado');
             return cart;
         } catch (error) {
@@ -173,8 +165,7 @@ class CartService {
             if (!mongoose.Types.ObjectId.isValid(cartId)) {
                 throw new Error('ID de carrito inválido');
             }
-            const cart = await cartModel.findByIdAndUpdate(
-                cartId, { products: [] }, { new: true });
+            const cart = await CartRepository.updateCart(cartId, { products: [] });
             if (!cart) {
                 throw new Error('Carrito no encontrado!');
             }

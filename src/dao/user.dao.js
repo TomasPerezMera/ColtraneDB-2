@@ -22,7 +22,7 @@ class UserDAO {
         return await userModel.findOneAndUpdate(
             { id },
             userData,
-            { new: true }
+            { returnDocument: 'after', runValidators: true }
         );
     }
 
@@ -32,6 +32,10 @@ class UserDAO {
 
     async getAll() {
         return await userModel.find();
+    }
+
+    async getAllPaginated(filter, options) {
+    return await userModel.paginate(filter, options);
     }
 }
 
