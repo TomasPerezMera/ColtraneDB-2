@@ -122,8 +122,6 @@ async function updateProductQuantity(productId, newQuantity) {
         body: JSON.stringify({ quantity: newQuantity })
             });
         const data = await res.json();
-        console.log('Response status:', res.status);
-        console.log('Response data:', data);
         if (!res.ok) {
             const err = await res.json();
             Swal.fire({
