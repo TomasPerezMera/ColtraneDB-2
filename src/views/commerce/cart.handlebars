@@ -18,9 +18,9 @@
                         <p>Precio: ${{this.product.currentPrice}} x {{this.quantity}}</p>
                     </div>
                     <div class="quantity-controls">
-                        <button class="qty-btn btn" data-product-id="{{product._id}}" data-action="decrease">-</button>
-                        <span class="qty-display">{{quantity}}</span>
-                        <button class="qty-btn btn" data-product-id="{{product._id}}" data-action="increase">+</button>
+                        <button class="qty-btn btn cart-btn-minus" data-product-id="{{product._id}}">-</button>
+                        <span class="cart-qty-display">{{quantity}}</span>
+                        <button class="qty-btn btn cart-btn-plus" data-product-id="{{product._id}}">+</button>
                         <button class="remove-from-cart btn btn--danger" data-product-id="{{this.product._id}}">
                             Eliminar
                         </button>
@@ -39,7 +39,7 @@
             </button>
         </div>
     {{else}}
-        <p class="product-info product-title">Tu carrito está vacío.</p>
+        <p class="product-info product-title cart-empty">Tu carrito está vacío.</p>
     {{/if}}
     <hr>
     <div class="btn--return">

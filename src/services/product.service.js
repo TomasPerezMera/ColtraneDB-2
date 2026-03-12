@@ -45,7 +45,7 @@ class ProductService {
     try {
         // Validamos que ID sea numérico.
         if (!Number.isInteger(Number(productId))) {
-            throw new Error('ID de producto inválido');
+            throw new Error('ID de producto inválidoooo');
         }
         const product = await ProductRepository.getProductById({ id: productId });
         if (!product) {
@@ -53,7 +53,7 @@ class ProductService {
         }
         return product;
     } catch (error) {
-            throw new Error('Error obteniendo producto: ' + error.message);
+            throw new Error('Error obteniendo producto: 1111 ' + error.message);
         }
     }
 

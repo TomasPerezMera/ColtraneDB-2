@@ -100,7 +100,11 @@
         width: 100%;
         max-width: 200px;
         margin: 0 auto;
-    }
+}
+
+.cart-empty {
+    text-align: center;
+}
 
 /* Componentes de página /profile */
 

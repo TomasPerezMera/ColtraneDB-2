@@ -115,24 +115,35 @@ async function updateCartCounter() {
 // Actualizar cantidad de un producto específico.
 async function updateProductQuantity(productId, newQuantity) {
     const cartId = getCartId();
-    const res = await fetch(`/api/carts/${cartId}/products/${productId}`, {
+    try {
+        const res = await fetch(`/api/carts/${cartId}/products/${productId}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ quantity: newQuantity })
-    });
-    if (!res.ok) {
-        const err = await res.json();
+            });
+        const data = await res.json();
+        console.log('Response status:', res.status);
+        console.log('Response data:', data);
+        if (!res.ok) {
+            const err = await res.json();
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: err.message,
+                toast: true,
+                position: 'top-end',
+                timer: 3000
+                });
+            return { success: false };
+            }
+        return { success: true, cart: data.payload };
+    } catch(error) {
         Swal.fire({
             icon: 'error',
-            title: 'Error',
-            text: err.message,
-            toast: true,
-            position: 'top-end',
-            timer: 3000
+            text: 'Error al actualizar cantidad!'
         });
-        return;
+        return { success: false };
     }
-    location.reload();
 }
 
 
@@ -226,41 +237,73 @@ function initCartPageButtons() {
     });
 }
 
-function initQuantityControls() {
-    document.body.addEventListener("click", async (e) => {
-        const btn = e.target.closest(".qty-btn");
-        if (!btn) return;
-        const productId = btn.dataset.productId;
-        const action = btn.dataset.action;
-        const controls = btn.closest(".quantity-controls");
-        const qtyDisplay = controls.querySelector(".qty-display");
-        let currentQty = parseInt(qtyDisplay.textContent);
-        if (action === "increase" && currentQty < 3) {
-            currentQty++;
-            await updateProductQuantity(productId, currentQty);
+
+function initCartQuantityControls() {
+    document.querySelectorAll('.quantity-controls').forEach(controls => {
+        const plusBtn = controls.querySelector('.cart-btn-plus');
+        const minusBtn = controls.querySelector('.cart-btn-minus');
+        const qtyDisplay = controls.querySelector('.cart-qty-display');
+        const productId = plusBtn?.dataset.productId || minusBtn?.dataset.productId;
+
+        // Deshabilitamos botón + si ya hay 3 items globales en carrito;
+        const initialTotal = parseInt(document.querySelector('.total-items')?.textContent || '0');
+        if (plusBtn) plusBtn.disabled = (initialTotal >= 3);
+
+        if (plusBtn) {
+            plusBtn.addEventListener('click', async () => {
+                const currentQty = parseInt(qtyDisplay.textContent);
+                const result = await updateProductQuantity(productId, currentQty + 1);
+
+                if (result.success) {
+                    qtyDisplay.textContent = currentQty + 1;
+                    const totalItems = result.cart.products.reduce((sum, item) => sum + item.quantity, 0);
+                    // Actualizamos los botones reflejando la cantidad;
+                    document.querySelectorAll('.cart-btn-plus').forEach(btn => {
+                        btn.disabled = (totalItems >= 3);
+                    });
+                    // Actualizamos el display de total-items;
+                    const totalDisplay = document.querySelector('.total-items');
+                    if (totalDisplay) totalDisplay.textContent = totalItems;
+                }
+            });
         }
-        if (action === "decrease") {
-            if (currentQty === 1) {
-                // Eliminar producto si llega a 0
-                await removeFromCart(productId);
-                return;
-            } else {
-                currentQty--;
-                await updateProductQuantity(productId, currentQty);
-            }
+        if (minusBtn) {
+            minusBtn.addEventListener('click', async () => {
+                const currentQty = parseInt(qtyDisplay.textContent);
+                if (currentQty > 1) {
+                    const result = await updateProductQuantity(productId, currentQty - 1);
+                    if (result.success) {
+                        qtyDisplay.textContent = currentQty - 1;
+                        const totalItems = result.cart.products.reduce((sum, item) => sum + item.quantity, 0);
+                        document.querySelectorAll('.cart-btn-plus').forEach(btn => {
+                            btn.disabled = (totalItems >= 3);
+                        });
+                        const totalDisplay = document.querySelector('.total-items');
+                        if (totalDisplay) totalDisplay.textContent = totalItems;
+                    }
+                } else {
+                    await removeFromCart(productId);
+                }
+            });
         }
     });
 }
 
+
+// Botones de ProductDetail.
 function initProductDetailQuantity() {
     document.body.addEventListener("click", (e) => {
         const btn = e.target.closest(".qty-btn-detail");
         if (!btn) return;
         const qtyValue = document.querySelector(".qty-value");
+        const plusBtn = document.querySelector('.qty-btn-detail[data-action="increase"]');
+        const minusBtn = document.querySelector('.qty-btn-detail[data-action="decrease"]');
         let qty = parseInt(qtyValue.textContent);
         if (btn.dataset.action === "increase" && qty < 3) qty++;
         if (btn.dataset.action === "decrease" && qty > 1) qty--;
         qtyValue.textContent = qty;
+        if (plusBtn) plusBtn.disabled = (qty >= 3);
+        if (minusBtn) minusBtn.disabled = (qty <= 1);
     });
 }
 
@@ -278,7 +321,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     await initCart();
     initAddToCartButtons();
     initCartPageButtons();
-    initQuantityControls();
+    initCartQuantityControls();
     initProductDetailQuantity();
     initPurchaseButton();
     updateCartCounter();

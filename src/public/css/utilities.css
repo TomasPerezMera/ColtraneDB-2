@@ -1,22 +1,4 @@
-/* ============================================
-    Índice de Utilities Planificadas
-    ============================================
-    1. Layout Utilities (container, grid, flex)
-    2. Spacing Utilities (margin, padding, gap)
-    3. Typography Utilities (sizes, weights, alignment)
-    4. Button Utilities (base + modifiers)
-    5. Form Utilities (inputs, groups, states)
-    6. Visual Effects (gradients, borders, hover)
-    7. State Utilities (loading, error, success)
-   ============================================ */
-
-
 /* TODO REVAMP: General Utility Classes */
-
-
-
-
-
 
 .gradient-border {
     border-radius: 12px;
@@ -72,12 +54,12 @@
     justify-content: center;
     align-items: center;
     color: white;
-    padding: 10px 20px;
+    padding: 0.5rem;
     margin: 5px;
     border-radius: 5px;
     border: 1px solid var(--darkBlue);
     background-color: transparent;
-    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    font-size: clamp(0.8rem, 1.5vw, 1rem);
     cursor: pointer;
     transition: transform .25s ease, box-shadow .25s ease;
     min-height: 44px;
@@ -93,7 +75,6 @@
             0 0 20px rgba(66,135,245,.6);
     }
     &:disabled {
-        /*implementar en JS para botones +/- !!!*/
         opacity: 0.5;
         cursor: not-allowed;
         pointer-events: none;
@@ -128,5 +109,4 @@
     5. Form Utilities (inputs, groups, states)
     6. Visual Effects (gradients, borders, hover)
     7. State Utilities (loading, error, success)
-
 */

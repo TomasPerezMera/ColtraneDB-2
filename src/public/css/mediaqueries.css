@@ -6,7 +6,8 @@
         font-size: clamp(1rem, 1.2vw, 1.2rem);
     }
     .btn {
-        font-size: clamp(1.5rem, 1.5vw, 2rem)
+        font-size: clamp(1rem, 1.5vw, 1.25rem);
+        padding: 0.8rem 1rem;
     }
     .hamburger {
         display: none;
@@ -41,7 +42,7 @@
         flex: 1 1 calc(50% - 1rem);
     }
     .detail-grid{
-    grid-template-columns:1fr 2fr;
+    grid-template-columns:0.5fr 1fr;
     grid-template-areas:"cover-wrapper product-info";
     & .product-detail-image{
         margin: 50px 10px 0;
@@ -64,7 +65,20 @@
     }
     .product-info {
         text-align: left;
-        padding: 50px;
+        padding: 2rem 1rem;
+        & p {
+            font-size: clamp(1.25rem, 1.2vw, 1.5rem);
+        }
+    }
+    .product-detail {
+        text-align: left;
+        padding: 0.5rem 1rem;
+    }
+    .product-title {
+        font-size: clamp(1.5rem, 2vw, 2rem);
+    }
+    .product-detail-title {
+        font-size: clamp(2.5rem, 2vw, 3rem);
     }
     .quantity-controls {
         margin: 0;
@@ -83,10 +97,16 @@
         margin: 1rem auto;
         }
     }
+    .cart-empty {
+    text-align: center;
+    }
 }
 
 /* Desktop Mode Styles */
 @media (min-width: 1024px) {
+    .btn {
+        font-size: clamp(1.5rem, 1.5vw, 1.75rem);
+    }
     .product-grid {
         grid-template-columns: repeat(3, 1fr);
         gap: 4rem;
@@ -100,10 +120,18 @@
         }
     }
     .product-info {
-        text-align: left;
-        padding: 2.5rem;
+        padding: 2rem 1rem;
+    }
+    .product-title {
+        font-size: clamp(2rem, 2vw, 2.5rem);
+    }
+    .product-detail-title {
+        font-size: clamp(3rem, 2vw, 3.5rem);
     }
     .product-detail-image {
         max-width: 100%;
+    }
+    .cart-empty {
+    text-align: center;
     }
 }

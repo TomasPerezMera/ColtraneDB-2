@@ -29,6 +29,10 @@ router.get('/products', loadUser, async (req, res) => {
 
 // GET /products/:pid - Detalle del producto.
 router.get('/products/:pid', async (req, res) => {
+    // Validación para prevenir bug recurrente - carga de "source maps" bajo productId.
+    if (isNaN(req.params.pid)) {
+        return res.redirect('/products');
+    }
     try {
         const result = await ProductService.getById(req.params.pid);
         res.render('commerce/product-detail', {
@@ -36,7 +40,7 @@ router.get('/products/:pid', async (req, res) => {
             product: result.toObject()
         });
     } catch (error) {
-        console.error('Error: ', error.message);
+        console.error('Error: ROUTERGET', error.message);
         res.redirect('/products');
     }
 });

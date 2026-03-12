@@ -39,29 +39,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Botones de ProductDetail.
-    let quantity = 1;
-    const qtyValue = document.querySelector('.qty-value');
-    const minusBtn = document.querySelector('.qty-btn.minus');
-    const plusBtn = document.querySelector('.qty-btn.plus');
-
-    if (plusBtn) {
-        plusBtn.addEventListener('click', () => {
-            if (quantity < 3) {  // Límite de 3
-                quantity++;
-                qtyValue.textContent = quantity;
-            }
-        });
-    }
-
-    if (minusBtn) {
-        minusBtn.addEventListener('click', () => {
-            if (quantity > 1) {
-                quantity--;
-                qtyValue.textContent = quantity;
-            }
-        });
-    }
 
     const addBtn = document.getElementById('add-to-cart');
     if (addBtn) {

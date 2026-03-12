@@ -79,11 +79,6 @@ class CartService {
             }
             const cart = await CartRepository.getCartById(cartId);
             if (!cart) throw new Error('Carrito no encontrado');
-            console.log("productId recibido: ", productId);
-            cart.products.forEach(p => {
-                console.log("PRODUCT _IDS:", p.product._id)
-            })
-
             // Buscamos el producto en el carrito;
             const productIndex = cart.products.findIndex(
                 item => item.product._id.toString() === productId
