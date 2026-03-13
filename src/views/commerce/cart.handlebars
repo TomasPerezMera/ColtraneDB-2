@@ -14,8 +14,12 @@
                         <h3>{{this.product.name}}</h3>
                         <p>Artista: {{this.product.artist}}</p>
                         <p>Precio Unitario: ${{this.product.currentPrice}}</p>
-                        <p>Cantidad: {{this.quantity}}</p>
-                        <p>Precio: ${{this.product.currentPrice}} x {{this.quantity}}</p>
+                        <p class="item-quantity" data-product-id="{{this.product._id}}">
+                            Cantidad: <span>{{this.quantity}}</span>
+                        </p>
+                        <p class="item-total-price" data-product-id="{{this.product._id}}" data-unit-price="{{this.product.currentPrice}}">
+                            Precio total: $<span></span>
+                        </p>
                     </div>
                     <div class="quantity-controls">
                         <button class="qty-btn btn cart-btn-minus" data-product-id="{{product._id}}">-</button>
@@ -29,8 +33,8 @@
             {{/each}}
         </div>
         <div class="cart-total product-info">
-            <h2>Total de ítems: {{totalItems}}</h2>
-            <h2>Total a pagar: ${{cart.totalPrice}}</h2>
+            <h2>Total de ítems: <span class="display-total-items">{{totalItems}}</span></h2>
+            <h2>Total a pagar: $<span class="display-total-price">{{cart.totalPrice}}</span></h2>
             <button class="btn clear-cart gradient-border">
                 Vaciar Carrito
             </button>

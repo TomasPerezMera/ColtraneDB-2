@@ -236,32 +236,53 @@ function initCartPageButtons() {
 }
 
 
+// Función Helper para actualizar displays tras cambio de cantidad de ítems.
+function handleCartQuantityUpdate(result, productId, controls) {
+    if (!result.success) return;
+    const totalItems = result.cart.products.reduce((sum, item) => sum + item.quantity, 0);
+    const totalPrice = result.cart.products.reduce((sum, item) => {
+        return sum + (item.product.currentPrice * item.quantity);
+    }, 0);
+    // Actualizamos totales globales;
+    const totalItemsDisplay = document.querySelector('.display-total-items');
+    if (totalItemsDisplay) totalItemsDisplay.textContent = totalItems;
+    const totalPriceDisplay = document.querySelector('.display-total-price');
+    if (totalPriceDisplay) totalPriceDisplay.textContent = totalPrice;
+    // Actualizamos item específico;
+    const itemProduct = result.cart.products.find(p => p.product._id.toString() === productId);
+    if (itemProduct) {
+        const itemQuantityDisplay = document.querySelector(`.item-quantity[data-product-id="${productId}"] span`);
+        if (itemQuantityDisplay) itemQuantityDisplay.textContent = itemProduct.quantity;
+        const itemTotalPrice = itemProduct.product.currentPrice * itemProduct.quantity;
+        const itemTotalPriceDisplay = document.querySelector(`.item-total-price[data-product-id="${productId}"] span`);
+        if (itemTotalPriceDisplay) itemTotalPriceDisplay.textContent = itemTotalPrice;
+    }
+    // Actualizamos botones globales;
+    document.querySelectorAll('.cart-btn-plus').forEach(btn => {
+        btn.disabled = (totalItems >= 3);
+    });
+    // Por último, actualizamos contador del navbar.
+    updateCartCounter();
+    animateCartIcon();
+}
+
+// Inicializamos listeners de botones de cantidad.
 function initCartQuantityControls() {
     document.querySelectorAll('.quantity-controls').forEach(controls => {
         const plusBtn = controls.querySelector('.cart-btn-plus');
         const minusBtn = controls.querySelector('.cart-btn-minus');
         const qtyDisplay = controls.querySelector('.cart-qty-display');
         const productId = plusBtn?.dataset.productId || minusBtn?.dataset.productId;
-
-        // Deshabilitamos botón + si ya hay 3 items globales en carrito;
-        const initialTotal = parseInt(document.querySelector('.total-items')?.textContent || '0');
+        const initialTotal = parseInt(document.querySelector('.display-total-items')?.textContent || '0');
         if (plusBtn) plusBtn.disabled = (initialTotal >= 3);
-
+        // Listenes de Botones;
         if (plusBtn) {
             plusBtn.addEventListener('click', async () => {
                 const currentQty = parseInt(qtyDisplay.textContent);
                 const result = await updateProductQuantity(productId, currentQty + 1);
-
                 if (result.success) {
                     qtyDisplay.textContent = currentQty + 1;
-                    const totalItems = result.cart.products.reduce((sum, item) => sum + item.quantity, 0);
-                    // Actualizamos los botones reflejando la cantidad;
-                    document.querySelectorAll('.cart-btn-plus').forEach(btn => {
-                        btn.disabled = (totalItems >= 3);
-                    });
-                    // Actualizamos el display de total-items;
-                    const totalDisplay = document.querySelector('.total-items');
-                    if (totalDisplay) totalDisplay.textContent = totalItems;
+                    handleCartQuantityUpdate(result, productId, controls);
                 }
             });
         }
@@ -272,17 +293,28 @@ function initCartQuantityControls() {
                     const result = await updateProductQuantity(productId, currentQty - 1);
                     if (result.success) {
                         qtyDisplay.textContent = currentQty - 1;
-                        const totalItems = result.cart.products.reduce((sum, item) => sum + item.quantity, 0);
-                        document.querySelectorAll('.cart-btn-plus').forEach(btn => {
-                            btn.disabled = (totalItems >= 3);
-                        });
-                        const totalDisplay = document.querySelector('.total-items');
-                        if (totalDisplay) totalDisplay.textContent = totalItems;
+                        handleCartQuantityUpdate(result, productId, controls);
                     }
                 } else {
                     await removeFromCart(productId);
+                    updateCartCounter();
+                    animateCartIcon();
                 }
             });
+        }
+    });
+}
+
+// Función inicializadora de cálculo de precio de cart-items.
+function initCartPriceCalculations() {
+    document.querySelectorAll('.item-total-price').forEach(priceEl => {
+        const unitPrice = parseFloat(priceEl.dataset.unitPrice);
+        const productId = priceEl.dataset.productId;
+        const quantityEl = document.querySelector(`.item-quantity[data-product-id="${productId}"] span`);
+        if (quantityEl) {
+            const quantity = parseInt(quantityEl.textContent);
+            const totalPriceSpan = priceEl.querySelector('span');
+            if (totalPriceSpan) totalPriceSpan.textContent = unitPrice * quantity;
         }
     });
 }
@@ -317,10 +349,13 @@ function initPurchaseButton() {
 // Event Listeners en la carga de página.
 document.addEventListener("DOMContentLoaded", async () => {
     await initCart();
+    if (document.querySelector('.cart-total')) {
+        initCartPriceCalculations();
+        initCartQuantityControls();
+        initCartPageButtons()
+        initPurchaseButton();
+    }
     initAddToCartButtons();
-    initCartPageButtons();
-    initCartQuantityControls();
     initProductDetailQuantity();
-    initPurchaseButton();
     updateCartCounter();
 });
