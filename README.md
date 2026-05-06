@@ -18,7 +18,7 @@
 - Sistema de carrito (persistente y local)
 - Autenticación de usuarios
 - Actualizaciones en tiempo real
-- Panel de administración
+- Validación de roles User/Admin para manipulación de catálogo
 
 ## Estructura
 
