@@ -1,6 +1,6 @@
 # ColtraneDB-2
 
-## Segunda Instancia del proyecto de Base de Datos y Backend para el E-Commerce "El Rincón De Coltrane" (https://github.com/TomasPerezMera/ElReactDeColtrane).-
+## Segunda Instancia del proyecto de Base de Datos y Backend para el E-Commerce "El Rincón De Coltrane" (https://github.com/TomasPerezLosada/ElReactDeColtrane) .-
 
 ## Enlace A Deploy: https://coltranedb.onrender.com/
 
